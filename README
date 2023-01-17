@@ -21,11 +21,11 @@ output - processors will output to this topic so we can do some tests
 1. duplication
 2. any missing
 
-from within Intellij - run the processor spring app - then duplicate the run configuration and 2 more times - thus creating 3 processors for the Input topic
+from within Intellij - run the processor spring app - then duplicate the run configuration 2 more times - thus creating 3 processors for the Input topic
 
 The processors receives an Input and generates based on that an Output
 
 
-then run the test app - the tester (SpringKafkaApplicationTest). This will generate messages and then wait for processing to finish (when output receives all 1000 message) Then the test asserts that all messages were received and that there are no duplicates
+then run the test app - the tester (SpringKafkaApplicationTest - like any spring app from intellij - open the class and hit the play button). This will generate messages and then wait for processing to finish (when output receives all 1000 message) Then the test asserts that all messages were received and that there are no duplicates
 
 
