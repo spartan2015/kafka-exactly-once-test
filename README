@@ -8,7 +8,7 @@ this will start the kafka and bind it to localhost:9092
 
 The topics we create using spring boot in this case - for the input topic we set 3 partitions but we could partition it as much as we want
 
-We cannot have more consumer than partitions. In this case 3 partition - 3 consumers max. But we can adjust if needed.
+We cannot have more consumers than partitions. In this case 3 partitions - 3 consumers max. Adjust if needed.
 
 We use 2 topics:
 
