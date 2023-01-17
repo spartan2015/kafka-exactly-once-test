@@ -1,0 +1,31 @@
+This application Tests that a given number of messages can be processed by a group of kafka consumers in an idempotent way - exactly once delivery with no duplicates.
+
+to run this you will need docker
+
+then cd into kafka subfolder and build using docker-compose up
+
+this will start the kafka and bind it to localhost:9092
+
+The topics we create using spring boot in this case - for the input topic we set 3 partitions but we could partition it as much as we want
+
+We cannot have more consumer than partitions. In this case 3 partition - 3 consumers max. But we can adjust if needed.
+
+We use 2 topics:
+
+input - this will be processed by our Processors
+
+and
+
+output - processors will output to this topic so we can do some tests
+
+1. duplication
+2. any missing
+
+from within Intellij - run the processor spring app - then duplicate the run configuration and 2 more times - thus creating 3 processors for the Input topic
+
+The processors receives an Input and generates based on that an Output
+
+
+then run the test app - the tester (SpringKafkaApplicationTest). This will generate messages and then wait for processing to finish (when output receives all 1000 message) Then the test asserts that all messages were received and that there are no duplicates
+
+
