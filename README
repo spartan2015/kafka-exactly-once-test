@@ -21,6 +21,10 @@ output - processors will output to this topic so we can do some tests
 1. duplication
 2. any missing
 
+The Processor will generate a runtime error - to simulate failure.
+
+You can also stop a processor to see how they rest rebalance and test completes.
+
 from within Intellij - run the processor spring app - then duplicate the run configuration 2 more times - thus creating 3 processors for the Input topic
 
 The processors receives an Input and generates based on that an Output
