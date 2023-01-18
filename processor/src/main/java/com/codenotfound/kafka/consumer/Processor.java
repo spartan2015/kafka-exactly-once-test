@@ -33,10 +33,10 @@ public class Processor {
     LOGGER.info("received data='{}'", consumerRecord.toString());
     String key = (String)consumerRecord.key();
 
-    if (Random.from(RandomGenerator.getDefault()).nextInt() % 3 == 0){
+ /*   if (Random.from(RandomGenerator.getDefault()).nextInt() % 3 == 0){
       throw new RuntimeException("fail");
     }
-
+*/
     send("output", key, (String)consumerRecord.value());
   }
 }
