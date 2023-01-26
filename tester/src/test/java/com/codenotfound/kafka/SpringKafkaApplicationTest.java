@@ -36,11 +36,13 @@ public class SpringKafkaApplicationTest {
 
     @Test
     public void test() throws Exception {
-        System.out.println("With transactions");
+        System.out.println("With EXACLTY_ONCE guarantee");
         long durationTransactions =  executeTest("inputTransactions");
         System.out.println("");
         Thread.sleep(3 * 1000);
-        System.out.println("Without transactions");
+        receiver.receivedSet.clear();
+        receiver.duplicated.clear();
+        System.out.println("With AT_LEAST_ONCE guarantee");
         long durationNoTransactions = executeTest("inputNoTransactions");
         System.out.println();
         System.out.println("Without transactions is " + BigDecimal.valueOf(durationTransactions).divide(BigDecimal.valueOf(durationNoTransactions), 2).toString() + " times faster");
