@@ -1,9 +1,7 @@
 package com.codenotfound.kafka.consumer;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -27,8 +25,8 @@ public class OutputReceiver {
     this.latch = latch;
   }
 
-  public Set<String> receivedSet = new HashSet<>();
-  public List<String> duplicated =  new ArrayList<>();
+  public Set<String> receivedSet = new TreeSet<>();
+  public List<String> duplicated =  new CopyOnWriteArrayList<>();
 
   @KafkaListener(topics = "${topic.boot}")
   public void receive(ConsumerRecord<?, ?> consumerRecord) {
@@ -37,7 +35,7 @@ public class OutputReceiver {
 
     if (receivedSet.contains(key)) {
       duplicated.add(key);
-      System.err.println("Duplicated key " + key);
+     // System.err.println("Duplicated key " + key);
     }
     receivedSet.add(key);
 

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class Sender {
@@ -14,8 +15,9 @@ public class Sender {
   @Autowired
   private KafkaTemplate<String, String> kafkaTemplate;
 
+  @Transactional
   public void send(String topic, String key, String data) {
-    LOGGER.info("sending data='{}' to topic='{}'", data, topic);
+    //LOGGER.info("sending data='{}' to topic='{}'", data, topic);
     kafkaTemplate.send(topic, key, data);
     kafkaTemplate.flush();
   }
