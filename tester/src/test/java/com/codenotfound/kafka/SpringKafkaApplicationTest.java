@@ -45,11 +45,11 @@ public class SpringKafkaApplicationTest {
         System.out.println("With AT_LEAST_ONCE guarantee");
         long durationNoTransactions = executeTest("inputNoTransactions");
         System.out.println();
-        System.out.println("Without transactions is " + BigDecimal.valueOf(durationTransactions).divide(BigDecimal.valueOf(durationNoTransactions), 2).toString() + " times faster");
+        System.out.println("Without transactions is " + BigDecimal.valueOf(durationTransactions).divide(BigDecimal.valueOf(durationNoTransactions), 2, BigDecimal.ROUND_HALF_EVEN).toString() + " times faster");
     }
 
     private long executeTest(String topic) throws InterruptedException {
-        int NO_OF_MESSAGES_TO_TEST = 10_000;
+        int NO_OF_MESSAGES_TO_TEST = 1000_000;
         receiver.setLatch(new CountDownLatch(NO_OF_MESSAGES_TO_TEST));
 
         System.out.println("Start " + LocalDateTime.now());
