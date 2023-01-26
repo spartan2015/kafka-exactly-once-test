@@ -46,6 +46,34 @@ public class SpringKafkaApplicationTest {
         long durationNoTransactions = executeTest("inputNoTransactions");
         System.out.println();
         System.out.println("Without transactions is " + BigDecimal.valueOf(durationTransactions).divide(BigDecimal.valueOf(durationNoTransactions), 2, BigDecimal.ROUND_HALF_EVEN).toString() + " times faster");
+
+        System.out.println("");
+        receiver.receivedSet.clear();
+        receiver.duplicated.clear();
+        System.out.println("With EXACLTY_ONCE guarantee");
+        durationTransactions =  executeTest("inputTransactions");
+        System.out.println("");
+        Thread.sleep(3 * 1000);
+        receiver.receivedSet.clear();
+        receiver.duplicated.clear();
+        System.out.println("With AT_LEAST_ONCE guarantee");
+        durationNoTransactions = executeTest("inputNoTransactions");
+        System.out.println();
+        System.out.println("Without transactions is " + BigDecimal.valueOf(durationTransactions).divide(BigDecimal.valueOf(durationNoTransactions), 2, BigDecimal.ROUND_HALF_EVEN).toString() + " times faster");
+
+        System.out.println("");
+        receiver.receivedSet.clear();
+        receiver.duplicated.clear();
+        System.out.println("With EXACLTY_ONCE guarantee");
+        durationTransactions =  executeTest("inputTransactions");
+        System.out.println("");
+        Thread.sleep(3 * 1000);
+        receiver.receivedSet.clear();
+        receiver.duplicated.clear();
+        System.out.println("With AT_LEAST_ONCE guarantee");
+        durationNoTransactions = executeTest("inputNoTransactions");
+        System.out.println();
+        System.out.println("Without transactions is " + BigDecimal.valueOf(durationTransactions).divide(BigDecimal.valueOf(durationNoTransactions), 2, BigDecimal.ROUND_HALF_EVEN).toString() + " times faster");
     }
 
     private long executeTest(String topic) throws InterruptedException {
