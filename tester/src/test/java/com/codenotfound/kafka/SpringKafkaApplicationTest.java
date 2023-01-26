@@ -38,6 +38,7 @@ public class SpringKafkaApplicationTest {
         System.out.println("With transactions");
         long durationTransactions =  executeTest("inputTransactions");
         System.out.println("");
+        Thread.sleep(3 * 1000);
         System.out.println("Without transactions");
         long durationNoTransactions = executeTest("inputNoTransactions");
         System.out.println();

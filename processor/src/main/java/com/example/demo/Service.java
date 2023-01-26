@@ -1,6 +1,11 @@
 package com.example.demo;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.ValueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,29 +13,17 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+
 @org.springframework.stereotype.Service
 public class Service {
     private static final Logger LOGGER = LoggerFactory.getLogger(Service.class);
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    void buildPipeline(StreamsBuilder streamsBuilder) {
+        KStream<String, String> messageStream = streamsBuilder
+                .stream("inputTransactions", Consumed.with(Serdes.String(), Serdes.String()));
 
-    @KafkaListener(topics = "inputTransactions", groupId = "withTransactions", errorHandler = "errorHandler")
-    @Transactional
-    public void receive(ConsumerRecord<?, ?> consumerRecord) {
-        //LOGGER.info("received data='{}'", consumerRecord.toString());
-        String key = (String) consumerRecord.key();
-        //System.out.println(key);
-
-      /*  if (true){
-            throw new RuntimeException("my ex");
-        }*/
-
-        //transactionalService.doService();
-        kafkaTemplate.send("output", key, (String) consumerRecord.value());
-       /* kafkaTemplate.executeInTransaction(kafkaTemplate ->{
-
-            return null;
-        });*/
+        messageStream.to("output");
     }
 }
