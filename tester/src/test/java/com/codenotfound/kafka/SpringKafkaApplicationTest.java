@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +43,7 @@ public class SpringKafkaApplicationTest {
         System.out.println("Without transactions");
         long durationNoTransactions = executeTest("inputNoTransactions");
         System.out.println();
-        System.out.println("Without transactions is " + (durationTransactions / durationNoTransactions) + " times faster");
+        System.out.println("Without transactions is " + BigDecimal.valueOf(durationTransactions).divide(BigDecimal.valueOf(durationNoTransactions), 2).toString() + " times faster");
     }
 
     private long executeTest(String topic) throws InterruptedException {
