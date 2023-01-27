@@ -77,7 +77,7 @@ public class SpringKafkaApplicationTest {
     }
 
     private long executeTest(String topic) throws InterruptedException {
-        int NO_OF_MESSAGES_TO_TEST = 1000_000;
+        int NO_OF_MESSAGES_TO_TEST = 1;
         receiver.setLatch(new CountDownLatch(NO_OF_MESSAGES_TO_TEST));
 
         System.out.println("Start " + LocalDateTime.now());

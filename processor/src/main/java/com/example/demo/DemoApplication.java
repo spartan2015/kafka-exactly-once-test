@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import brave.Tracing;
+import brave.kafka.streams.KafkaStreamsTracing;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -46,6 +48,7 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
+
 	@Bean
 	public NewTopic compactTopicExample() {
 		return TopicBuilder.name("inputTransactions")
@@ -68,98 +71,7 @@ public class DemoApplication {
 	}
 
 	@Bean
-	public ConsumerFactory<String, String> consumerFactory(ObjectProvider<DefaultKafkaConsumerFactoryCustomizer> customizers) {
-		Map<String, Object> props = new HashMap<>();
-		props.put(
-				ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				"localhost:9092");
-		props.put(
-				ConsumerConfig.GROUP_ID_CONFIG,
-				"test");
-		props.put(
-				ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-				StringDeserializer.class);
-		props.put(
-				ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-				StringDeserializer.class);
-
-		props.put(
-				ConsumerConfig.ISOLATION_LEVEL_CONFIG,
-				"read_committed");
-		props.put(
-				ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,
-				"false");
-		props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
-
-
-		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(props);
-
-		cf.addListener(new MicrometerConsumerListener<>(new SimpleMeterRegistry()));
-		customizers.orderedStream().forEach(customizer -> customizer.customize(cf));
-		return cf;
-	}
-
-	@Bean
-	public ProducerFactory<String, String> producerFactory(ObjectProvider<DefaultKafkaProducerFactoryCustomizer> customizers) {
-
-		Map<String, Object> props = new HashMap<>();
-		props.put("key.serializer",
-				"org.apache.kafka.common.serialization.StringSerializer");
-
-		props.put("value.serializer",
-				"org.apache.kafka.common.serialization.StringSerializer");
-
-		props.put(
-				ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				"localhost:9092");
-		props.put(
-				ConsumerConfig.GROUP_ID_CONFIG,
-				"test");
-		props.put(
-				ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-				StringDeserializer.class);
-		props.put(
-				ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-				StringDeserializer.class);
-
-		props.put(
-				"enable.idempotence",
-				"true");
-		props.put("transactional.id", "my-transactional-id");
-		props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
-
-
-		DefaultKafkaProducerFactory<String, String> cf = new DefaultKafkaProducerFactory<>(props);
-		cf.addListener(new MicrometerProducerListener<>(new SimpleMeterRegistry()));
-		customizers.orderedStream().forEach(customizer -> customizer.customize(cf));
-		return cf;
-	}
-
-	@Bean
-	public KafkaTemplate<String, String> kafkaTemplate(ProducerFactory<String, String> producerFactory) {
-		KafkaTemplate<String, String> stringStringKafkaTemplate = new KafkaTemplate<>(producerFactory);
-		stringStringKafkaTemplate.setObservationEnabled(true);//trying out with
-		return stringStringKafkaTemplate;
-	}
-
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, String>
-	kafkaListenerContainerFactory(ConsumerFactory<String, String> consumerFactory) {
-
-
-		ConcurrentKafkaListenerContainerFactory<String, String> factory =
-				new ConcurrentKafkaListenerContainerFactory<>();
-
-		//The following code enable observation in the consumer listener
-		factory.getContainerProperties().setObservationEnabled(true);
-		factory.setConsumerFactory(consumerFactory);
-
-
-		return factory;
-	}
-
-	@Bean
-	public KafkaTransactionManager kafkaTransactionManager(final ProducerFactory<String, String> producerFactoryTransactional) {
-		return new KafkaTransactionManager<>(producerFactoryTransactional);
+	public KafkaStreamsTracing kafkaStreamsTracer(@Autowired Tracing tracing) {
+		return KafkaStreamsTracing.create(tracing);
 	}
 }
